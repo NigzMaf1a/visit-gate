@@ -1,8 +1,10 @@
+// src/components/Submit.jsx
 import React from 'react';
+import { Button, Stack } from '@mantine/core';
 import PropTypes from 'prop-types';
 
 /**
- * A reusable Submit button component styled with Bootstrap.
+ * A reusable Submit button component styled with Mantine.
  * Props:
  * - label: Text to display on the button.
  * - onClick: Function to handle the click event.
@@ -10,16 +12,20 @@ import PropTypes from 'prop-types';
  */
 function Submit({ label = 'Submit', onClick, disabled = false }) {
   return (
-    <div className="d-grid gap-2">
-      <button
+    <Stack spacing="sm">
+      <Button
         type="submit"
-        className="btn btn-primary btn-lg"
+        size="lg"
+        color="blue"
+        fullWidth
         onClick={onClick}
         disabled={disabled}
+        radius="md"
+        variant="filled"
       >
         {label}
-      </button>
-    </div>
+      </Button>
+    </Stack>
   );
 }
 

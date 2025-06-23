@@ -1,6 +1,19 @@
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import {
+  Card,
+  Select,
+  Table,
+  Text,
+  Title,
+  Loader,
+  Center,
+  ScrollArea,
+  Stack,
+  Alert,
+} from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 function MostVisitedUnitsCard({ weeks }) {
   const [selectedWeek, setSelectedWeek] = useState(weeks[0] || 'This Week');
@@ -8,7 +21,6 @@ function MostVisitedUnitsCard({ weeks }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch data when the component mounts or selectedWeek changes
   useEffect(() => {
     fetchVisits(selectedWeek);
   }, [selectedWeek]);
@@ -27,64 +39,66 @@ function MostVisitedUnitsCard({ weeks }) {
     }
   };
 
-  const handleWeekChange = (e) => {
-    setSelectedWeek(e.target.value);
+  const handleWeekChange = (value) => {
+    setSelectedWeek(value);
   };
 
   const topThree = visits.slice(0, 3);
 
   return (
-    <div className="visit-card bg-white p-3 rounded shadow-sm">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="text-start m-0 fs-5">Most Visited Units</h2>
-        <select
-          className="form-select form-select-sm w-auto"
-          onChange={handleWeekChange}
-          value={selectedWeek}
-        >
-          {weeks.map((week, idx) => (
-            <option key={idx} value={week}>
-              {week}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {loading ? (
-        <div className="text-center text-muted">Loading...</div>
-      ) : error ? (
-        <div className="text-danger text-center">{error}</div>
-      ) : (
-        <div className="table-container table-responsive">
-          <table className="table table-sm table-striped table-bordered">
-            <thead className="table-light">
-              <tr>
-                <th>Unit</th>
-                <th>Resident</th>
-                <th>Visits</th>
-                <th>Last Visit</th>
-                <th>Frequent Visitor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {topThree.map((entry, index) => (
-                <tr key={index}>
-                  <td>{entry.unitName}</td>
-                  <td>{entry.residentName}</td>
-                  <td>{entry.visitCount}</td>
-                  <td>{entry.lastVisit}</td>
-                  <td>{formatVisitorName(entry.frequentVisitor)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Stack spacing="xs">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Title order={4}>Most Visited Units</Title>
+          <Select
+            data={weeks}
+            value={selectedWeek}
+            onChange={handleWeekChange}
+            size="xs"
+            w={150}
+            withinPortal
+          />
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <Center>
+            <Loader size="sm" color="blue" />
+          </Center>
+        ) : error ? (
+          <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red" radius="sm">
+            {error}
+          </Alert>
+        ) : (
+          <ScrollArea type="auto">
+            <Table striped withBorder highlightOnHover verticalSpacing="sm">
+              <thead>
+                <tr>
+                  <th>Unit</th>
+                  <th>Resident</th>
+                  <th>Visits</th>
+                  <th>Last Visit</th>
+                  <th>Frequent Visitor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topThree.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.unitName}</td>
+                    <td>{entry.residentName}</td>
+                    <td>{entry.visitCount}</td>
+                    <td>{entry.lastVisit}</td>
+                    <td>{formatVisitorName(entry.frequentVisitor)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </ScrollArea>
+        )}
+      </Stack>
+    </Card>
   );
 }
 
-// Helper to shorten long visitor names
 function formatVisitorName(name) {
   if (name.length > 15) {
     const [first, ...rest] = name.split(' ');

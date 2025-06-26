@@ -26,21 +26,22 @@ const Header = () => {
   });
 
   return (
-    <Box
-      component="header"
-      style={{
-        backgroundColor: '#00580d', 
-        paddingRight: '1.5rem',
-        paddingTop: '1rem',
-        paddingBottom: '1rem',
-        position: 'relative',
-        height: '90px',
-        bottom: '8px',
-        width: '100%'
-        
-  
-      }}
-    >
+          <Box
+        component="header"
+        p="md"
+        style={{
+          backgroundColor: '#00580d',
+          paddingRight: '1.5rem',
+          paddingTop: '1rem',
+          paddingBottom: '1rem',
+          position: 'fixed', 
+          top: 0,             
+          left: 0,
+          width: '100%',      
+          height: '90px',
+          zIndex: 1000        
+        }}
+      >
       <Flex justify="space-between" align="center" gap="1.25rem">
         {/* Left: Date Badge */}
         <Text
